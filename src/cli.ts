@@ -19,10 +19,10 @@ program
   .option('-d, --default-namespace <name>', 'Default namespace (overrides config)')
   .option('-b, --base-locale <locale>', 'Base locale to use for type generation (overrides config)')
   .option('--verbose', 'Enable verbose logging', false)
-  .action((options) => {
+  .action(async (options) => {
     try {
       // Load config file first
-      const config = loadConfig(options.config);
+      const config = await loadConfig(options.config);
       
       // Override config with CLI options if provided
       const finalConfig = {
@@ -53,7 +53,7 @@ program
 program
   .command('init')
   .description('Create a default configuration file')
-  .option('-o, --output <path>', 'Output path for config file', 'i18n-types.config.js')
+  .option('-o, --output <path>', 'Output path for config file (auto-detects format if not provided)')
   .action((options) => {
     try {
       createDefaultConfigFile(options.output);

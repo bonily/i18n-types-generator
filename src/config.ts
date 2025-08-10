@@ -23,8 +23,12 @@ const DEFAULT_CONFIG: I18nConfig = {
 
 const CONFIG_FILE_NAMES = [
   'i18n-types.config.js',
+  'i18n-types.config.mjs',
+  'i18n-types.config.cjs',
   'i18n-types.config.json',
   '.i18n-types.config.js',
+  '.i18n-types.config.mjs',
+  '.i18n-types.config.cjs',
   '.i18n-types.config.json'
 ];
 
@@ -44,7 +48,7 @@ export function findConfigFile(startDir: string = process.cwd()): string | null 
   return null;
 }
 
-export function loadConfig(configPath?: string): I18nConfig {
+export async function loadConfig(configPath?: string): Promise<I18nConfig> {
   let config = { ...DEFAULT_CONFIG };
   
   // If no config path provided, try to find one
@@ -60,7 +64,12 @@ export function loadConfig(configPath?: string): I18nConfig {
         const configContent = fs.readFileSync(configPath, 'utf-8');
         const fileConfig = JSON.parse(configContent) as ConfigFileOptions;
         config = { ...config, ...fileConfig };
-      } else if (configPath.endsWith('.js')) {
+      } else if (configPath.endsWith('.mjs')) {
+        // Use dynamic import for ES modules
+        const module = await import(path.resolve(configPath));
+        const fileConfig = module.default as ConfigFileOptions;
+        config = { ...config, ...fileConfig };
+      } else if (configPath.endsWith('.cjs') || configPath.endsWith('.js')) {
         // Clear require cache to allow hot reloading
         delete require.cache[require.resolve(configPath)];
         const fileConfig = require(configPath) as ConfigFileOptions;
@@ -74,8 +83,22 @@ export function loadConfig(configPath?: string): I18nConfig {
   return config;
 }
 
-export function createDefaultConfigFile(outputPath: string = 'i18n-types.config.js'): void {
-  const configContent = `module.exports = {
+function detectProjectType(): 'module' | 'commonjs' {
+  try {
+    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    if (fs.existsSync(packageJsonPath)) {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+      return packageJson.type === 'module' ? 'module' : 'commonjs';
+    }
+  } catch (error) {
+    // If we can't read package.json, default to CommonJS
+  }
+  return 'commonjs';
+}
+
+function getConfigContent(format: 'module' | 'commonjs'): string {
+  if (format === 'module') {
+    return `export default {
   // Path to your locales directory
   localesPath: './src/locales',
   
@@ -95,7 +118,58 @@ export function createDefaultConfigFile(outputPath: string = 'i18n-types.config.
   // exclude: ['internal']
 };
 `;
+  } else {
+    return `module.exports = {
+  // Path to your locales directory
+  localesPath: './src/locales',
+  
+  // Output directory for generated types
+  outputDir: './types',
+  
+  // Default namespace for i18next
+  defaultNamespace: 'Common',
+  
+  // Base locale to use for type generation
+  baseLocale: 'ru',
+  
+  // Watch for changes (future feature)
+  // watch: false,
+  
+  // Exclude certain namespanes or files (future feature)
+  // exclude: ['internal']
+};
+`;
+  }
+}
 
+export function createDefaultConfigFile(outputPath?: string): void {
+  const projectType = detectProjectType();
+  
+  // Auto-detect the appropriate file extension and format
+  if (!outputPath) {
+    if (projectType === 'module') {
+      outputPath = 'i18n-types.config.mjs';
+    } else {
+      outputPath = 'i18n-types.config.js';
+    }
+  }
+  
+  // Determine format based on file extension and project type
+  let format: 'module' | 'commonjs';
+  if (outputPath.endsWith('.mjs')) {
+    format = 'module';
+  } else if (outputPath.endsWith('.cjs')) {
+    format = 'commonjs';
+  } else {
+    format = projectType;
+  }
+  
+  const configContent = getConfigContent(format);
+  
   fs.writeFileSync(outputPath, configContent, 'utf-8');
   console.log(`Created config file: ${outputPath}`);
+  
+  if (format === 'module' && outputPath.endsWith('.js')) {
+    console.log('Note: Using ES module syntax. If you encounter issues, consider renaming to .mjs or using .cjs for CommonJS syntax.');
+  }
 }

@@ -21,6 +21,21 @@ npm install -g i18n-types-generator
 npm install --save-dev i18n-types-generator
 ```
 
+## Quick Start (No Installation Required)
+
+If you don't want to install the package globally, you can use `npx` to run it directly:
+
+```bash
+# Create a configuration file
+npx i18n-types-generator init
+
+# Generate types
+npx i18n-types-generator
+
+# Generate with custom options
+npx i18n-types-generator --locales ./src/locales --output ./types
+```
+
 ## Usage
 
 ### Configuration File
@@ -28,14 +43,19 @@ npm install --save-dev i18n-types-generator
 Create a configuration file to customize the behavior:
 
 ```bash
-# Create a default config file
+# If installed globally
 i18n-types-gen init
 
+# If using npx (recommended for beginners)
+npx i18n-types-generator init
+
 # Create config file at custom location
-i18n-types-gen init --output my-config.js
+npx i18n-types-generator init --output my-config.js
 ```
 
-This creates a `i18n-types.config.js` file:
+The tool automatically detects your project type and creates the appropriate config file format:
+
+**For CommonJS projects** (creates `i18n-types.config.js`):
 
 ```javascript
 module.exports = {
@@ -53,7 +73,56 @@ module.exports = {
 };
 ```
 
+**For ES Module projects** (creates `i18n-types.config.mjs`):
+
+```javascript
+export default {
+    // Path to your locales directory
+    localesPath: "./src/locales",
+
+    // Output directory for generated types
+    outputDir: "./types",
+
+    // Default namespace for i18next
+    defaultNamespace: "Common",
+
+    // Base locale to use for type generation
+    baseLocale: "ru",
+};
+```
+
+**Manual format selection:**
+
+```bash
+# Force CommonJS format
+npx i18n-types-generator init --output i18n-types.config.cjs
+
+# Force ES Module format
+npx i18n-types-generator init --output i18n-types.config.mjs
+
+# Auto-detect based on project type
+npx i18n-types-generator init
+```
+
 ### CLI Usage
+
+**With npx (no installation required):**
+
+```bash
+# Use config file (auto-detected)
+npx i18n-types-generator
+
+# Use specific config file
+npx i18n-types-generator --config ./my-config.js
+
+# Override config with CLI options
+npx i18n-types-generator --locales ./src/locales --output ./types
+
+# With verbose output
+npx i18n-types-generator --verbose
+```
+
+**If installed globally:**
 
 ```bash
 # Use config file (auto-detected)
@@ -79,6 +148,13 @@ i18n-types-gen --verbose
 -   `--verbose` - Enable verbose logging
 
 ### CLI Commands
+
+**With npx:**
+
+-   `npx i18n-types-generator` - Generate types using config file or default options
+-   `npx i18n-types-generator init` - Create a default configuration file
+
+**If installed globally:**
 
 -   `i18n-types-gen` - Generate types using config file or default options
 -   `i18n-types-gen init` - Create a default configuration file
@@ -220,7 +296,7 @@ Add to your `package.json`:
 ```json
 {
     "scripts": {
-        "types:i18n": "i18n-types-gen",
+        "types:i18n": "npx i18n-types-generator",
         "i18n:watch": "nodemon --watch src/locales -e json --exec \"npm run types:i18n\"",
         "build": "npm run types:i18n && tsc"
     },
@@ -229,6 +305,8 @@ Add to your `package.json`:
     }
 }
 ```
+
+**Note:** If you have the package installed globally, you can use `"types:i18n": "i18n-types-gen"` instead.
 
 ### Development Workflow
 

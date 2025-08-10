@@ -1,6 +1,6 @@
 {
   "name": "i18n-types-generator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A CLI tool for generating TypeScript types from i18next translation files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
