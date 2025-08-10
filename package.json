@@ -1,0 +1,76 @@
+{
+  "name": "i18n-types-generator",
+  "version": "1.0.0",
+  "description": "A CLI tool for generating TypeScript types from i18next translation files",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    }
+  },
+  "bin": {
+    "i18n-types-gen": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/cli.js"
+  },
+  "keywords": [
+    "i18n",
+    "i18next",
+    "typescript",
+    "types",
+    "generator",
+    "internationalization",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "commander": "^11.1.0"
+  },
+  "peerDependencies": {
+    "i18next": ">=21.0.0",
+    "react-i18next": ">=11.0.0"
+  },
+  "peerDependenciesMeta": {
+    "i18next": {
+      "optional": true
+    },
+    "react-i18next": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.8",
+    "ts-jest": "^29.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/i18n-types-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/i18n-types-generator/issues"
+  },
+  "homepage": "https://github.com/yourusername/i18n-types-generator#readme"
+}

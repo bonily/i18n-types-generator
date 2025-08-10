@@ -1,0 +1,17 @@
+{
+  "login": "Войти",
+  "logout": "Выйти",
+  "register": "Зарегистрироваться",
+  "forgot": {
+    "password": "Забыли пароль?"
+  },
+  "form": {
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "email": "Электронная почта"
+  },
+  "errors": {
+    "invalidCredentials": "Неверные учетные данные",
+    "accountLocked": "Аккаунт заблокирован"
+  }
+}

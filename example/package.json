@@ -1,0 +1,13 @@
+{
+  "name": "i18n-types-generator-example",
+  "version": "1.0.0",
+  "description": "Example usage of i18n-types-generator",
+  "private": true,
+  "scripts": {
+    "generate-types": "i18n-types-gen --locales ./src/locales --output ./types --verbose",
+    "build": "npm run generate-types && echo 'Types generated successfully!'"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}
