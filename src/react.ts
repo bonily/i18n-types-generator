@@ -3,8 +3,9 @@
 
 export { useTranslation, t, useI18nTranslation } from './hooks';
 export type { 
-  TranslationKey, 
   TranslationOptions, 
-  TypedTFunction, 
-  TranslationNamespace 
+  TypedTFunction
 } from './types';
+
+// Note: TranslationKey and TranslationNamespace should be imported from generated files
+// Example: import type { TranslationKey } from './types/i18n';

@@ -259,7 +259,7 @@ export type TranslationKey = `l:Common.${keyof CommonNamespace}` | `l:Auth.${key
 }
 ```
 
-2. Use with react-i18next:
+2. Use with standard react-i18next (basic type safety):
 
 ```typescript
 import { useTranslation } from "react-i18next";
@@ -267,27 +267,34 @@ import { useTranslation } from "react-i18next";
 function MyComponent() {
     const { t } = useTranslation();
 
-    // This will be type-safe!
-    return <div>{t("l:Common.welcome")}</div>;
+    // Basic type safety through i18next module augmentation
+    // TypeScript knows about namespaces but not specific keys
+    return <div>{t("welcome", { ns: "Common" })}</div>;
 }
 ```
 
-3. Use the enhanced type-safe hooks (optional):
+3. Use the enhanced type-safe hooks (full type safety):
 
 ```typescript
-// Import the enhanced hooks from the package
+// Import the enhanced hooks from the package for full type safety
 import { useTranslation, t } from "i18n-types-generator/react";
 
 function MyComponent() {
     const { t } = useTranslation();
 
-    // Fully type-safe with autocomplete
+    // Fully type-safe with autocomplete - no type assertions needed!
     return <div>{t("l:Common.welcome")}</div>;
 }
 
-// Or use the standalone t function
+// Or use the standalone t function with automatic type safety
 const message = t("l:Auth.login");
 ```
+
+**Important Note**:
+
+-   **Standard react-i18next**: Gets basic type safety through i18next module augmentation (knows namespaces, not specific keys)
+-   **Enhanced hooks**: Get full type safety with autocomplete for your exact translation keys using the `l:Namespace.key` format
+-   The generated types include module augmentation that enhances our package's types with your specific translation keys
 
 ## Package.json Scripts
 

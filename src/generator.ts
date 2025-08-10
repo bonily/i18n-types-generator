@@ -171,14 +171,35 @@ declare module 'i18next' {
 }
 
 declare module 'react-i18next' {
-  export interface UseTranslationResponse {
+  interface UseTranslationResponse<Ns extends Namespace = DefaultNamespace> {
     t: (key: TranslationKey, options?: TranslationOptions) => string;
     i18n: typeof i18n;
+    ready: boolean;
   }
+  
+  export function useTranslation<Ns extends Namespace = DefaultNamespace>(
+    ns?: Ns | Ns[],
+    options?: UseTranslationOptions<Ns>
+  ): UseTranslationResponse<Ns>;
 }
 
 export interface TypedTFunction {
   (key: TranslationKey, options?: TranslationOptions): string;
+}
+
+// Module augmentation for i18n-types-generator hooks
+declare module 'i18n-types-generator/hooks' {
+  export type TranslationKey = StaticTranslationKey;
+  export interface TypedTFunction {
+    (key: StaticTranslationKey, options?: TranslationOptions): string;
+  }
+}
+
+declare module 'i18n-types-generator/react' {
+  export type TranslationKey = StaticTranslationKey;
+  export interface TypedTFunction {
+    (key: StaticTranslationKey, options?: TranslationOptions): string;
+  }
 }
 `;
   }

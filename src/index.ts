@@ -8,9 +8,9 @@ export type {
 export { loadConfig, createDefaultConfigFile, findConfigFile } from './config';
 export type { I18nConfig, ConfigFileOptions } from './config';
 
+// Export only the non-generated types from ./types
+// TranslationKey and TranslationNamespace should be imported from generated files
 export type { 
-  TranslationKey, 
   TranslationOptions, 
-  TypedTFunction, 
-  TranslationNamespace 
+  TypedTFunction
 } from './types';
