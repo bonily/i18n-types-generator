@@ -67,10 +67,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/i18n-types-generator.git"
+    "url": "https://github.com/bonily/i18n-types-generator.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/i18n-types-generator/issues"
+    "url": "https://github.com/bonily/i18n-types-generator/issues"
   },
-  "homepage": "https://github.com/yourusername/i18n-types-generator#readme"
+  "homepage": "https://github.com/bonily/i18n-types-generator#readme"
 }
