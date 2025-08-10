@@ -1,7 +1,7 @@
 // This file contains React hooks and is optional
 // It will only work if react-i18next and i18next are installed
 
-// Base types that can be augmented by generated types
+// Base types - these will work with any string, including generated types
 export interface TranslationOptions {
   defaultValue?: string;
   count?: number;
@@ -10,12 +10,9 @@ export interface TranslationOptions {
   [key: string]: any;
 }
 
-// Default fallback type - will be augmented by generated types
-export type TranslationKey = string;
-
-// Interface that can be augmented by generated types
-export interface TypedTFunction {
-  (key: TranslationKey, options?: TranslationOptions): string;
+// Generic function type that works with any string type
+export interface TypedTFunction<T extends string = string> {
+  (key: T, options?: TranslationOptions): string;
 }
 
 function stripPrefix(key: string): string {
@@ -26,8 +23,8 @@ function stripPrefix(key: string): string {
     return key;
 }
 
-// Type-safe translation function that uses global TranslationKey type
-export const t: TypedTFunction = ((key: TranslationKey, options?: TranslationOptions) => {
+// Generic translation function that accepts any string type
+export const t: TypedTFunction = ((key: string, options?: TranslationOptions) => {
     try {
         const i18n = require('i18next');
         return i18n.t(stripPrefix(key), options);
@@ -37,13 +34,13 @@ export const t: TypedTFunction = ((key: TranslationKey, options?: TranslationOpt
     }
 }) as TypedTFunction;
 
-// Type-safe useTranslation hook that returns properly typed t function
-export function useTranslation(): { t: TypedTFunction; i18n: any } {
+// Generic useTranslation hook that works with any string type
+export function useTranslation<T extends string = string>(): { t: TypedTFunction<T>; i18n: any } {
     try {
         const { useTranslation: useI18nTranslation } = require('react-i18next');
         const { t: rawT, i18n: i18nInstance } = useI18nTranslation();
 
-        const tFunction: TypedTFunction = (key: TranslationKey, options?: TranslationOptions) => {
+        const tFunction: TypedTFunction<T> = (key: T, options?: TranslationOptions) => {
             return rawT(stripPrefix(key), options);
         };
 

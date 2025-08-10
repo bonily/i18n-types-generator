@@ -278,23 +278,27 @@ function MyComponent() {
 ```typescript
 // Import the enhanced hooks from the package for full type safety
 import { useTranslation, t } from "i18n-types-generator/react";
+// Import the generated TranslationKey type
+import type { TranslationKey } from "./types/i18n";
 
 function MyComponent() {
-    const { t } = useTranslation();
+    // Specify the type parameter to get full type safety
+    const { t } = useTranslation<TranslationKey>();
 
     // Fully type-safe with autocomplete - no type assertions needed!
     return <div>{t("l:Common.welcome")}</div>;
 }
 
-// Or use the standalone t function with automatic type safety
-const message = t("l:Auth.login");
+// Or use the standalone t function (requires type parameter in function call)
+const message = t("l:Auth.login"); // Works with module augmentation
 ```
 
 **Important Note**:
 
 -   **Standard react-i18next**: Gets basic type safety through i18next module augmentation (knows namespaces, not specific keys)
--   **Enhanced hooks**: Get full type safety with autocomplete for your exact translation keys using the `l:Namespace.key` format
--   The generated types include module augmentation that enhances our package's types with your specific translation keys
+-   **Enhanced hooks**: Get full type safety by importing the generated `TranslationKey` type and using it as a type parameter
+-   The generated types include module augmentation that automatically enhances the default behavior of the hooks
+-   You can use either the type parameter approach or rely on the module augmentation for automatic typing
 
 ## Package.json Scripts
 

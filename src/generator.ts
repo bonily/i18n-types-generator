@@ -189,17 +189,29 @@ export interface TypedTFunction {
 
 // Module augmentation for i18n-types-generator hooks
 declare module 'i18n-types-generator/hooks' {
-  export type TranslationKey = StaticTranslationKey;
-  export interface TypedTFunction {
-    (key: StaticTranslationKey, options?: TranslationOptions): string;
+  interface TypedTFunction<T extends string = string> {
+    (key: T, options?: TranslationOptions): string;
   }
+  
+  const t: TypedTFunction<StaticTranslationKey>;
+  
+  function useTranslation<T extends string = StaticTranslationKey>(): { 
+    t: TypedTFunction<T>; 
+    i18n: any 
+  };
 }
 
 declare module 'i18n-types-generator/react' {
-  export type TranslationKey = StaticTranslationKey;
-  export interface TypedTFunction {
-    (key: StaticTranslationKey, options?: TranslationOptions): string;
+  interface TypedTFunction<T extends string = string> {
+    (key: T, options?: TranslationOptions): string;
   }
+  
+  const t: TypedTFunction<StaticTranslationKey>;
+  
+  function useTranslation<T extends string = StaticTranslationKey>(): { 
+    t: TypedTFunction<T>; 
+    i18n: any 
+  };
 }
 `;
   }
